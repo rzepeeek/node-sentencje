@@ -1,4 +1,4 @@
-const czas = 3000;
+const czas = 0;
 console.log('Początek skryptu...');
 setTimeout(() => {
  console.log(`Minęły co najmniej ${czas} ms`);
