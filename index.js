@@ -1,5 +1,15 @@
 import http from 'node:http';
 import fs from 'node:fs/promises';
+import path from 'node:path';
+import { Worker } from 'node:worker_threads';
+function raportWWatku(ms) {
+ return new Promise((resolve, reject) => {
+ const plik = path.join(import.meta.dirname, 'raport-worker.js');
+ const watek = new Worker(plik, { workerData: { ms } });
+ watek.once('message', resolve);
+ watek.once('error', reject);
+ });
+}
 const PORT = 3000;
 function wyslij(res, status, tresc, typ = 'text/plain') {
  res.writeHead(status, { 'Content-Type': `${typ}; charset=utf-8` });
@@ -33,8 +43,10 @@ const server = http.createServer(async (req, res) => {
  } else if (req.url === '/czekaj') {
  await czekaj(5000); // 5 s czekania na timer
  wyslij(res, 200, 'Gotowe (setTimeout – 5 s czekania)');
+ } else if (req.url === '/raport-watek') {
+ wyslij(res, 200, await raportWWatku(5000));
  } else {
- wyslij(res, 404, `Nie znaleziono: ${req.url}`);
+    wyslij(res, 404, `Nie znaleziono: ${req.url}`);
  }
 });
 server.listen(PORT, () => {
