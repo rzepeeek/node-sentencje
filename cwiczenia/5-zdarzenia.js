@@ -7,5 +7,5 @@ sklep.on('zamowienie', (produkt) => {
  console.log(` [faktury] zamówienie: ${produkt}`);
 });
 console.log('przed emit');
-sklep.emit('zamowienie', 'kawa');
+sklep.emit('zamowieni', 'kawa');
 console.log('po emit');
